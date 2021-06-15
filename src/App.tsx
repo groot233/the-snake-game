@@ -5,12 +5,9 @@ import './App.css';
 import { Game } from './Game';
 
 function Lawn(props: JSX.IntrinsicElements['mesh']) {
-  // This reference will give us direct access to the mesh
-  const mesh = useRef<THREE.Mesh>(null!);
   return (<>
     <mesh
-      {...props}
-      ref={mesh}>
+      {...props}>
       <boxGeometry args={[30, 0.2, 30]} />
       <meshToonMaterial color='#578a34' />
     </mesh>
@@ -20,10 +17,9 @@ function Lawn(props: JSX.IntrinsicElements['mesh']) {
 }
 
 function Snake(props: JSX.IntrinsicElements['mesh']) {
-  const mesh = useRef<THREE.Mesh>(null!);
   return (
     <>
-      <mesh {...props} ref={mesh}>
+      <mesh {...props}>
         <boxGeometry args={[1, 1, 1]} />
         <meshToonMaterial color='#5076f9' />
       </mesh>
