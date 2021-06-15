@@ -4,6 +4,7 @@ import React, { useRef, useState } from 'react'
 import { Canvas, useFrame, useThree, extend, ReactThreeFiber } from '@react-three/fiber'
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import './App.css';
+import { Light } from 'three';
 
 declare global {
   namespace JSX {
@@ -25,7 +26,7 @@ function Lawn(props: JSX.IntrinsicElements['mesh']) {
     <mesh
       {...props}
       ref={mesh}>
-      <boxGeometry args={[10, 1, 10]} />
+      <boxGeometry args={[30, 0.2, 30]} />
       <meshToonMaterial color='#578a34' />
     </mesh>
     <axesHelper args={[100]} />
@@ -63,12 +64,12 @@ function Snake(props: JSX.IntrinsicElements['mesh']) {
 export default function App() {
   return (
     <div id="canvasContainer" style={{ width: window.innerWidth, height: window.innerHeight }}>
-      <Canvas camera={{ position: [8, 5, 8] }}>
+      <Canvas camera={{ position: [20, 5, 20] }}>
       <CameraControls />
         <ambientLight args={["0x404040", 0.2]} />
-        <pointLight position={[3, 3, 0]}/>
+        <directionalLight/>
         <Snake position={[0, 0 , 0]}/>
-        <Lawn position={[0, -1, 0]} />
+        <Lawn position={[0, -0.5, 0]} />
       </Canvas>
     </div>
   )
