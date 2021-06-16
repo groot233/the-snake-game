@@ -37,12 +37,13 @@ export function PlayGround(props: Props) {
     });
 
     function generateFoodPos() {
-        let row, col;
-        do { // TODO: cannot hit snake body
+        let row: number, col: number, pos: Vector2;
+        do { // cannot hit snake body
             row = randomInt(-LawnRange / 2 + foodRadius, LawnRange / 2 - foodRadius);
             col = randomInt(-LawnRange / 2 + foodRadius, LawnRange / 2 - foodRadius);
-        } while (row === 0 && col === 0);
-        return new Vector2(row, col);
+            pos = new Vector2(row, col);
+        } while (props.body.find(i => i.equals(pos)));
+        return pos;
     }
 
     function renderPiece(pos: Vector2, index: number) {
