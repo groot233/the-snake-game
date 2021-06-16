@@ -27,6 +27,7 @@ export function CameraControls() {
             args={[camera, domElement]}
             maxPolarAngle={Math.PI / 2}
             minPolarAngle={0}
+            enableZoom={false}
         />
     );
 };

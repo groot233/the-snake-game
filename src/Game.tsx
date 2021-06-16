@@ -47,12 +47,13 @@ export function Game() {
 
     return (
         <div id="canvasContainer" style={{ width: window.innerWidth, height: window.innerHeight }}>
-            <Canvas camera={{ position: [0, 25, 20] }}>
-                <CameraControls />
+            <Canvas camera={{ position: [0, 15, 7] }}>
+                <CameraControls/>
                 <ambientLight args={["0x404040", 0.2]} />
                 <directionalLight />
                 <PlayGround body={body} velocity={velocity} onBodyChange={handleBodyChange} />
-                <gridHelper args={[30, 30]} position={[0, -0.4, 0]} />
+                <gridHelper args={[17, 17]} position={[0, -0.4, 0]}/>
+                <axesHelper args={[3]} position={[-15, 0, -15]}/>
             </Canvas>
         </div>);
 }

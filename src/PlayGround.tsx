@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { BoxGeometry, Vector2, Vector3 } from "three";
 
 type handleBodyChange = (body: Vector2[]) => void;
-const foodRange = 30;
+const LawnRange = 17;
 const foodRadius = 0.5;
 
 interface Props {
@@ -34,14 +34,14 @@ export function PlayGround(props: Props) {
     });
 
     function generateFoodPos() {
-        return new Vector2(randomInt(-foodRange / 2 + foodRadius, foodRange / 2 - foodRadius),
-            randomInt(-foodRange / 2 + foodRadius, foodRange / 2 - foodRadius));
+        return new Vector2(randomInt(-LawnRange / 2 + foodRadius, LawnRange / 2 - foodRadius),
+            randomInt(-LawnRange / 2 + foodRadius, LawnRange / 2 - foodRadius));
     }
 
     function Food() {
         return (
             <mesh position={[foodPos.x, 0, foodPos.y]}>
-                <sphereGeometry args={[0.5, 12, 12]} />
+                <sphereGeometry args={[0.5, 8, 8]} />
                 <meshToonMaterial color='#e7471d' />
             </mesh>);
     }
@@ -50,10 +50,10 @@ export function PlayGround(props: Props) {
         return (<>
             <mesh
                 {...props}>
-                <boxGeometry args={[30, 0.2, 30]} />
+                <boxGeometry args={[LawnRange, 0.2, LawnRange]} />
                 <meshToonMaterial color='#578a34' />
             </mesh>
-            <axesHelper args={[100]} />
+
         </>
         );
     }
