@@ -39,7 +39,7 @@ export function Game() {
     }
 
     function handleBodyChange(newBody: Vector2[]) {
-        setBody(newBody);
+        setBody([...newBody]);
     }
 
     return (
