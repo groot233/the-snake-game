@@ -36,8 +36,12 @@ export function PlayGround(props: Props) {
     });
 
     function generateFoodPos() {
-        return new Vector2(randomInt(-LawnRange / 2 + foodRadius, LawnRange / 2 - foodRadius),
-            randomInt(-LawnRange / 2 + foodRadius, LawnRange / 2 - foodRadius));
+        let row, col;
+        do { // cannot have pos (0,0)
+            row = randomInt(-LawnRange / 2 + foodRadius, LawnRange / 2 - foodRadius);
+            col = randomInt(-LawnRange / 2 + foodRadius, LawnRange / 2 - foodRadius);
+        } while (row === 0 && col === 0);
+        return new Vector2(row, col);
     }
 
     function renderPiece(pos: Vector2, index: number) {
