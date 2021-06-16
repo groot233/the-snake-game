@@ -1,66 +1,55 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Canvas, useFrame, useThree, extend, ReactThreeFiber } from '@react-three/fiber'
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import './App.css';
+import { Vector2, Vector3 } from 'three';
+import { PlayGround } from './PlayGround';
+import { CameraControls } from './CameraControls';
 
-declare global {
-    namespace JSX {
-        interface IntrinsicElements {
-            orbitControls: ReactThreeFiber.Object3DNode<OrbitControls, typeof OrbitControls>
+const velocityScalar = 1;
+
+export function Game() {
+
+    const [velocity, setVelocity] = useState(new Vector3(0, 0, 0)); // store direction
+    const [body, setBody] = useState([new Vector2(0, 0)]);// storing a list of position vectors
+
+    useEffect(() => {
+        window.addEventListener("keydown", handleKeyDown)
+        console.log("set up keydown listener");
+        return () => {
+            window.removeEventListener("keydown", handleKeyDown);
+            console.log("remove keydown listener");
         }
-    }
-}
+    }, [])
 
-// Calling extend with the native OrbitControls class from Three.js
-// will make orbitControls available as a native JSX element.
-// Notice how the OrbitControls classname becomes lowercase orbitControls when used as JSX element.
-extend({ OrbitControls });
-
-export function Game(props: any) {
     function handleKeyDown(event: KeyboardEvent) {
         let key = event.key;
         if (key === "ArrowUp" || key === "w") {
             console.log("ArrowUp");
+            setVelocity(new Vector3(0, 0, -1 * velocityScalar));
         } else if (key === "ArrowDown" || key === "s") {
             console.log("ArrowDown");
+            setVelocity(new Vector3(0, 0, 1 * velocityScalar));
         } else if (key === "ArrowLeft" || key === "a") {
             console.log("ArrowLeft");
+            setVelocity(new Vector3(-1 * velocityScalar, 0, 0));
         } else if (key === "ArrowRight" || key === "d") {
             console.log("ArrowRight");
+            setVelocity(new Vector3(1 * velocityScalar, 0, 0));
         }
     }
 
-    useEffect(() => {
-        window.addEventListener("keydown", handleKeyDown)
-        return () => {
-            window.removeEventListener("keydown", handleKeyDown)
-        }
-    }, [])
-
-    function CameraControls() {
-        const { camera, gl: { domElement } } = useThree();
-        // Ref to the controls, so that we can update them on every frame using useFrame
-        const controls = useRef(new OrbitControls(camera, domElement));
-        useFrame(state => controls.current.update());
-        return (
-            <orbitControls
-                ref={controls}
-                args={[camera, domElement]}
-                maxPolarAngle={Math.PI / 2}
-                minPolarAngle={0}
-            />
-        );
-    };
+    function handleBodyChange(newBody: Vector2[]) {
+        setBody(newBody);
+    }
 
     return (
-        <>
-            <div id="canvasContainer" style={{ width: window.innerWidth, height: window.innerHeight }}>
-                <Canvas camera={{ position: [20, 25, 0] }}>
-                    <CameraControls />
-                    <ambientLight args={["0x404040", 0.2]} />
-                    <directionalLight />
-                    {props.children}
-                </Canvas>
-            </div>
-        </>);
+        <div id="canvasContainer" style={{ width: window.innerWidth, height: window.innerHeight }}>
+            <Canvas camera={{ position: [0, 25, 20] }}>
+                <CameraControls />
+                <ambientLight args={["0x404040", 0.2]} />
+                <directionalLight />
+                <PlayGround body={body} velocity={velocity} onBodyChange={handleBodyChange} />
+                <gridHelper args={[30, 30]} position={[0, -0.4, 0]} />
+            </Canvas>
+        </div>);
 }
