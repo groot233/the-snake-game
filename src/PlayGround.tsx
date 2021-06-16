@@ -18,10 +18,11 @@ export function PlayGround(props: Props) {
     const [foodPos, setfoodPos] = useState(generateFoodPos());
     useFrame((state, delta) => {
         let newBody = props.body;
-        let head = props.body[0];
-        let velocity = new Vector2(props.velocity.x, props.velocity.z)
+        let head = new Vector2(0, 0);
+        head.copy(props.body[0]);
+        let velocity = new Vector2(props.velocity.x, props.velocity.z);
         let newHead = head.addScaledVector(velocity, delta);
-        console.log(newHead);
+        // console.log(newHead);
         // newHead.set(Math.floor(newHead.x), Math.floor(newHead.x));
         newBody.unshift(newHead);
         // if the snake eats food, no need to pops
