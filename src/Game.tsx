@@ -8,15 +8,12 @@ import { inherits } from 'util';
 
 const velocityScalar = 1;
 
-function randomInt(min: number, max: number) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-}
+
 
 export function Game() {
 
     const [velocity, setVelocity] = useState(new Vector3(0, 0, 0)); // store direction
     const [body, setBody] = useState([new Vector2(0, 0)]);// storing a list of position vectors
-    const [foodPos, setFoodPos] = useState(new Vector2(randomInt(-15, 15), randomInt(-15, 15)));
 
     useEffect(() => {
         window.addEventListener("keydown", handleKeyDown)
@@ -55,10 +52,6 @@ export function Game() {
                 <ambientLight args={["0x404040", 0.2]} />
                 <directionalLight />
                 <PlayGround body={body} velocity={velocity} onBodyChange={handleBodyChange} />
-                <mesh position={[foodPos.x, 0, foodPos.y]}>
-                    <sphereGeometry args={[0.5, 12, 12]} />
-                    <meshToonMaterial color='#e7471d' />
-                </mesh>
                 <gridHelper args={[30, 30]} position={[0, -0.4, 0]} />
             </Canvas>
         </div>);
