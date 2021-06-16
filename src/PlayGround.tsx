@@ -3,6 +3,8 @@ import { useEffect, useRef, useState } from "react";
 import { BoxGeometry, Vector2, Vector3 } from "three";
 
 type handleBodyChange = (body: Vector2[]) => void;
+const foodRange = 30;
+const foodRadius = 0.5;
 
 interface Props {
     body: Vector2[];
@@ -17,9 +19,11 @@ export function PlayGround(props: Props) {
         let head = props.body[0];
         let velocity = new Vector2(props.velocity.x, props.velocity.z)
         let newHead = head.addScaledVector(velocity, delta);
+        console.log(newHead);
+        // newHead.set(Math.floor(newHead.x), Math.floor(newHead.x));
         newBody.unshift(newHead);
         // if the snake eats food, no need to pops
-        if (newHead.distanceTo(foodPos)<1) { // eats food
+        if (newHead.distanceTo(foodPos) < 1) { // eats food
             setfoodPos(generateFoodPos());
             console.log("eats it!", newBody);
         } else {
@@ -30,7 +34,8 @@ export function PlayGround(props: Props) {
     });
 
     function generateFoodPos() {
-        return new Vector2(randomInt(-15+0.5, 15-0.5), randomInt(-15+0.5, 15-0.5));
+        return new Vector2(randomInt(-foodRange / 2 + foodRadius, foodRange / 2 - foodRadius),
+            randomInt(-foodRange / 2 + foodRadius, foodRange / 2 - foodRadius));
     }
 
     function Food() {
@@ -54,7 +59,6 @@ export function PlayGround(props: Props) {
     }
 
     function renderPiece(pos: Vector2, index: number) {
-
         return (
             <>
                 <mesh key={index} position={[pos.x + 0.5, 0, pos.y + 0.5]}>
