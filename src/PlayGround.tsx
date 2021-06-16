@@ -16,29 +16,29 @@ interface Props {
 
 export function PlayGround(props: Props) {
     const [foodPos, setfoodPos] = useState(generateFoodPos());
+    const [curHead, setCurHead] = useState(new Vector2(0, 0));
     useFrame((state, delta) => {
-        let newBody = props.body;
-        let head = new Vector2(0, 0);
-        head.copy(props.body[0]);
+        let newBody = [...props.body];
         let velocity = new Vector2(props.velocity.x, props.velocity.z);
-        let newHead = head.addScaledVector(velocity, delta);
-        // console.log(newHead);
-        // newHead.set(Math.floor(newHead.x), Math.floor(newHead.x));
-        newBody.unshift(newHead);
-        // if the snake eats food, no need to pops
-        if (newHead.distanceTo(foodPos) < 1) { // eats food
-            setfoodPos(generateFoodPos());
-            console.log("eats it!", newBody);
-        } else {
-            newBody.pop();
+        setCurHead(curHead.add(velocity));
+        let newHead = new Vector2(Math.floor(curHead.x), Math.floor(curHead.y));
+        if (!newBody.find(i => i.equals(newHead))) {
+            newBody.unshift(newHead);
+            // if the snake eats food, no need to pops
+            if (curHead.distanceTo(foodPos) < 1) { // eats food
+                setfoodPos(generateFoodPos());
+                // console.log("eats it!", newBody);
+            }
+            else {
+                newBody.pop();
+            }
         }
-        // console.log(newHead);
         props.onBodyChange(newBody);
     });
 
     function generateFoodPos() {
         let row, col;
-        do { // cannot have pos (0,0)
+        do { // TODO: cannot hit snake body
             row = randomInt(-LawnRange / 2 + foodRadius, LawnRange / 2 - foodRadius);
             col = randomInt(-LawnRange / 2 + foodRadius, LawnRange / 2 - foodRadius);
         } while (row === 0 && col === 0);
@@ -49,7 +49,7 @@ export function PlayGround(props: Props) {
         return (
             <>
                 <mesh key={index} position={[pos.x, 0, pos.y]}>
-                    <boxGeometry args={[1, 1, 1]} />
+                    <boxGeometry args={[0.9, 1, 0.9]} />
                     <meshToonMaterial color={index === 0 ? 'hotpink' : '#5076f9'} />
                 </mesh>
             </>);
