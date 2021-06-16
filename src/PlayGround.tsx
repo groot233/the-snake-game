@@ -18,7 +18,7 @@ export function PlayGround(props: Props) {
         let newHead = head.addScaledVector(velocity, delta);
         newBody.unshift(newHead);
         newBody.pop();
-        console.log(newHead);
+        // console.log(newHead);
         props.onBodyChange(newBody);
     });
 
