@@ -1,6 +1,8 @@
 import { useFrame } from "@react-three/fiber";
-import { useEffect, useRef, useState } from "react";
-import { BoxGeometry, Vector2, Vector3 } from "three";
+import { useState } from "react";
+import { Vector2, Vector3 } from "three";
+import { Food } from "./Food";
+import { Lawn } from "./Lawn";
 
 type handleBodyChange = (body: Vector2[]) => void;
 const LawnRange = 17;
@@ -38,30 +40,10 @@ export function PlayGround(props: Props) {
             randomInt(-LawnRange / 2 + foodRadius, LawnRange / 2 - foodRadius));
     }
 
-    function Food() {
-        return (
-            <mesh position={[foodPos.x, 0, foodPos.y]}>
-                <sphereGeometry args={[0.5, 8, 8]} />
-                <meshToonMaterial color='#e7471d' />
-            </mesh>);
-    }
-
-    function Lawn(props: JSX.IntrinsicElements['mesh']) {
-        return (<>
-            <mesh
-                {...props}>
-                <boxGeometry args={[LawnRange, 0.2, LawnRange]} />
-                <meshToonMaterial color='#578a34' />
-            </mesh>
-
-        </>
-        );
-    }
-
     function renderPiece(pos: Vector2, index: number) {
         return (
             <>
-                <mesh key={index} position={[pos.x + 0.5, 0, pos.y + 0.5]}>
+                <mesh key={index} position={[pos.x, 0, pos.y]}>
                     <boxGeometry args={[1, 1, 1]} />
                     <meshToonMaterial color={index === 0 ? 'hotpink' : '#5076f9'} />
                 </mesh>
@@ -70,8 +52,8 @@ export function PlayGround(props: Props) {
 
     return (
         <>
-            <Lawn position={[0, -0.5, 0]} />
-            <Food />
+            <Lawn position={[0, -0.5, 0]} LawnRange={LawnRange} />
+            <Food foodPos={foodPos} />
             {props.body.map((pos, index) => renderPiece(pos, index))}
         </>);
 }
