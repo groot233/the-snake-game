@@ -6,7 +6,7 @@ import { PlayGround } from './PlayGround';
 import { CameraControls } from './CameraControls';
 import { inherits } from 'util';
 
-const velocityScalar = 1;
+const velocityScalar = 5;
 
 
 

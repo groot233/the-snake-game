@@ -11,20 +11,26 @@ interface Props {
 }
 
 export function PlayGround(props: Props) {
+    const [foodPos, setfoodPos] = useState(generateFoodPos());
     useFrame((state, delta) => {
         let newBody = props.body;
         let head = props.body[0];
         let velocity = new Vector2(props.velocity.x, props.velocity.z)
         let newHead = head.addScaledVector(velocity, delta);
         newBody.unshift(newHead);
-        newBody.pop();
+        // if the snake eats food, no need to pops
+        if (newHead.distanceTo(foodPos)<1) { // eats food
+            setfoodPos(generateFoodPos());
+            console.log("eats it!", newBody);
+        } else {
+            newBody.pop();
+        }
         // console.log(newHead);
         props.onBodyChange(newBody);
     });
 
-    const [foodPos, setfoodPos]=useState(generateFoodPos());
     function generateFoodPos() {
-        return new Vector2(randomInt(-15, 15), randomInt(-15, 15));
+        return new Vector2(randomInt(-15+0.5, 15-0.5), randomInt(-15+0.5, 15-0.5));
     }
 
     function Food() {
