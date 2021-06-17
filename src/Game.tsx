@@ -1,12 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
-import { Canvas, useFrame, useThree, extend, ReactThreeFiber } from '@react-three/fiber'
+import { Canvas } from '@react-three/fiber'
 import './App.css';
-import { SphereGeometry, Vector2, Vector3 } from 'three';
+import { Vector2, Vector3 } from 'three';
 import { PlayGround } from './PlayGround';
 import { CameraControls } from './CameraControls';
-import { inherits } from 'util';
 
-const velocityScalar = 0.01;
+const velocityScalar = 0.05;
 
 type gameState = 'start' | 'end';
 
@@ -45,7 +44,7 @@ export function Game() {
     function handleKeyDown(event: KeyboardEvent) {
         let key = event.key;
         let v = convertKeyToVector(key);
-        let vCopy= v.clone();
+        let vCopy = v.clone();
         if (!(vCopy.add(direction.current).equals(new Vector3(0, 0, 0)))) {
             direction.current = v;
             // console.log("set v", v, direction.current);
@@ -60,6 +59,7 @@ export function Game() {
 
     function handleGameOver() {
         console.log("game over!");
+        direction.current.set(0, 0, 0);
     }
 
     return (

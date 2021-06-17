@@ -1,4 +1,4 @@
-import { applyProps, useFrame } from "@react-three/fiber";
+import { useFrame } from "@react-three/fiber";
 import { useState } from "react";
 import { Vector2, Vector3 } from "three";
 import { Food } from "./Food";
@@ -22,8 +22,8 @@ export function PlayGround(props: Props) {
         let newBody = [...props.body];
         let velocity = new Vector2(props.velocity.x, props.velocity.z);
         setCurHead(curHead.add(velocity));
-        let newHead = getHeadInRange(curHead);
-        if (!newBody.find(i => i.equals(newHead))) {
+        let newHead = getHeadInRange(curHead, props.body);
+        if ((!newBody.find(i => i.equals(newHead)))) {
             newBody.unshift(newHead);
             // if the snake eats food, no need to pops
             if (curHead.distanceTo(foodPos) < 1) { // eats food
@@ -42,13 +42,17 @@ export function PlayGround(props: Props) {
     }
 
     // restrict head position to integer values and within range
-    function getHeadInRange(head: Vector2): Vector2 {
+    function getHeadInRange(head: Vector2, body: Vector2[]): Vector2 {
         let newHead = new Vector2(Math.floor(head.x), Math.floor(head.y));
-        if (!(newHead.x >= -LawnRange/2 && newHead.x <= LawnRange/2-0.5
-            && newHead.y >= -LawnRange/2 && newHead.y <= LawnRange/2-0.5)) {
+        console.log(newHead);
+        if (!(newHead.x >= -LawnRange / 2 && newHead.x <= LawnRange / 2 - 0.5
+            && newHead.y >= -LawnRange / 2 && newHead.y <= LawnRange / 2 - 0.5)) {
             // hit the edge, game over
             gameOver();
-        }
+        } else if (body.length > 1 && body.slice(1, body.length-1).find(piece => piece.equals(newHead))) {
+            // hit the body, game over
+            gameOver();
+        };
         return newHead;
     }
 
@@ -66,7 +70,7 @@ export function PlayGround(props: Props) {
         return (
             <>
                 <mesh key={index} position={[pos.x, 0, pos.y]}>
-                    <boxGeometry args={[0.9, 1, 0.9]} />
+                    <boxGeometry args={[1, 1, 1]} />
                     <meshToonMaterial color={index === 0 ? 'hotpink' : '#5076f9'} />
                 </mesh>
             </>);
