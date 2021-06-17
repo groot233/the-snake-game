@@ -1,4 +1,4 @@
-import { useFrame } from "@react-three/fiber";
+import { applyProps, useFrame } from "@react-three/fiber";
 import { useState } from "react";
 import { Vector2, Vector3 } from "three";
 import { Food } from "./Food";
@@ -12,6 +12,7 @@ interface Props {
     body: Vector2[];
     velocity: Vector3;
     onBodyChange: handleBodyChange;
+    onGameOver: () => void;
 }
 
 export function PlayGround(props: Props) {
@@ -21,7 +22,7 @@ export function PlayGround(props: Props) {
         let newBody = [...props.body];
         let velocity = new Vector2(props.velocity.x, props.velocity.z);
         setCurHead(curHead.add(velocity));
-        let newHead = new Vector2(Math.floor(curHead.x), Math.floor(curHead.y));
+        let newHead = getHeadInRange(curHead);
         if (!newBody.find(i => i.equals(newHead))) {
             newBody.unshift(newHead);
             // if the snake eats food, no need to pops
@@ -35,6 +36,21 @@ export function PlayGround(props: Props) {
         }
         props.onBodyChange(newBody);
     });
+
+    function gameOver() {
+        props.onGameOver();
+    }
+
+    // restrict head position to integer values and within range
+    function getHeadInRange(head: Vector2): Vector2 {
+        let newHead = new Vector2(Math.floor(head.x), Math.floor(head.y));
+        if (!(newHead.x >= -LawnRange/2 && newHead.x <= LawnRange/2-0.5
+            && newHead.y >= -LawnRange/2 && newHead.y <= LawnRange/2-0.5)) {
+            // hit the edge, game over
+            gameOver();
+        }
+        return newHead;
+    }
 
     function generateFoodPos() {
         let row: number, col: number, pos: Vector2;
