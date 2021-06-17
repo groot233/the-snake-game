@@ -10,11 +10,29 @@ const velocityScalar = 0.01;
 
 type gameState = 'start' | 'end';
 
-export function Game() {
+function convertKeyToVector(key: string): Vector3 {
+    if (key === "ArrowUp" || key === "w") {
+        console.log("ArrowUp");
+        return (new Vector3(0, 0, -1 * velocityScalar));
+    } else if (key === "ArrowDown" || key === "s") {
+        console.log("ArrowDown");
+        return (new Vector3(0, 0, 1 * velocityScalar));
+    } else if (key === "ArrowLeft" || key === "a") {
+        console.log("ArrowLeft");
+        return (new Vector3(-1 * velocityScalar, 0, 0));
+    } else if (key === "ArrowRight" || key === "d") {
+        console.log("ArrowRight");
+        return (new Vector3(1 * velocityScalar, 0, 0));
+    } else {
+        return (new Vector3(0, 0, 0));
+    }
+}
 
-    const [velocity, setVelocity] = useState(new Vector3(0, 0, 0)); // store direction
+export function Game() {
     const [body, setBody] = useState([new Vector2(0, 0)]);// storing a list of position vectors
     const [gameState, setGameState] = useState([new Vector2(0, 0)]);
+    const direction = useRef(new Vector3(0, 0, 0)); // store direction
+
     useEffect(() => {
         window.addEventListener("keydown", handleKeyDown)
         console.log("set up keydown listener");
@@ -26,18 +44,13 @@ export function Game() {
 
     function handleKeyDown(event: KeyboardEvent) {
         let key = event.key;
-        if (key === "ArrowUp" || key === "w") {
-            console.log("ArrowUp");
-            setVelocity(new Vector3(0, 0, -1 * velocityScalar));
-        } else if (key === "ArrowDown" || key === "s") {
-            console.log("ArrowDown");
-            setVelocity(new Vector3(0, 0, 1 * velocityScalar));
-        } else if (key === "ArrowLeft" || key === "a") {
-            console.log("ArrowLeft");
-            setVelocity(new Vector3(-1 * velocityScalar, 0, 0));
-        } else if (key === "ArrowRight" || key === "d") {
-            console.log("ArrowRight");
-            setVelocity(new Vector3(1 * velocityScalar, 0, 0));
+        let v = convertKeyToVector(key);
+        let vCopy= v.clone();
+        if (!(vCopy.add(direction.current).equals(new Vector3(0, 0, 0)))) {
+            direction.current = v;
+            // console.log("set v", v, direction.current);
+        } else {
+            // console.log("not set v");
         }
     }
 
@@ -55,7 +68,7 @@ export function Game() {
                 <CameraControls />
                 <ambientLight args={["0x404040", 0.2]} />
                 <directionalLight />
-                <PlayGround body={body} velocity={velocity} onBodyChange={handleBodyChange} onGameOver={handleGameOver} />
+                <PlayGround body={body} velocity={direction.current} onBodyChange={handleBodyChange} onGameOver={handleGameOver} />
                 <gridHelper args={[17, 17]} position={[0, -0.4, 0]} />
                 <axesHelper args={[3]} position={[-15, 0, -15]} />
             </Canvas>
