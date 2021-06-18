@@ -45,8 +45,8 @@ export function PlayGround(props: Props) {
     function getHeadInRange(head: Vector2, body: Vector2[]): Vector2 {
         let newHead = new Vector2(Math.floor(head.x), Math.floor(head.y));
         // console.log(newHead);
-        if (!(newHead.x >= -LawnRange / 2 + 1.5 && newHead.x <= LawnRange / 2 - 1.5
-            && newHead.y >= -LawnRange / 2 + 1.5 && newHead.y <= LawnRange / 2 - 1.5)) {
+        if (!(newHead.x >= -LawnRange / 2 + 0.5 && newHead.x <= LawnRange / 2 - 0.5
+            && newHead.y >= -LawnRange / 2 + 0.5 && newHead.y <= LawnRange / 2 - 0.5)) {
             // hit the edge, game over
             gameOver();
         } else if (body.length > 1 && body.slice(1, body.length - 1).find(piece => piece.equals(newHead))) {
