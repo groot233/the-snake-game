@@ -65,7 +65,7 @@ export function Game() {
     return (
         <div id="canvasContainer" style={{ width: window.innerWidth, height: window.innerHeight }}>
             <Canvas camera={{ position: [0, 15, 7] }}>
-                <CameraControls />
+                {/* <CameraControls /> */}
                 <ambientLight args={["0x404040", 0.2]} />
                 <directionalLight />
                 <PlayGround body={body} velocity={direction.current} onBodyChange={handleBodyChange} onGameOver={handleGameOver} />
